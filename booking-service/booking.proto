@@ -1,0 +1,57 @@
+syntax="proto3";
+option go_package="./genbooking-service";
+
+
+service BookingService{
+    rpc AddBooking(PostBookingRequest)returns(BookingResponse);
+    rpc GetBooking(BookingRequest)returns(BookingResponse);
+    rpc PutBooking(PutBookingRequest)returns(BookingResponse);
+    rpc DelBooking(BookingRequest)returns(DeleteBookingResponse);
+    rpc GetUserBooking(UserBookingRequest)returns(BookingResponse);
+    rpc GetUserEmail(UserBookingRequest)returns(UserBookingEmail);
+}
+
+message UserBookingEmail{
+    string email=1;
+}
+
+message PostBookingRequest{
+    string userId=1;
+    string hotelId=2;
+    string roomType=3;
+    string checkInDate=4;
+    string checkOutDate=5;
+}
+
+message BookingResponse{
+    string userId=1;
+    string hotelId=2;
+    string roomType=3;
+    string checkInDate=4;
+    string checkOutDate=5;
+    int32 totalAmount=6;
+    string bookingId=7;
+    string status=8;
+}
+
+message PutBookingRequest{
+    string checkInDate=1;
+    string checkOutDate=2;
+    string status=4;
+    string bookingId=5;
+}
+
+message BookingRequest{
+    string bookingId=1;
+}
+
+message UserBookingRequest{
+    string userId=1;
+}
+
+message DeleteBookingResponse{
+    string message=1;
+    string bookingId=2;
+}
+
+

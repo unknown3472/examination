@@ -1,0 +1,503 @@
+basePath: /
+definitions:
+  models.BookingResponse:
+    properties:
+      bookingId:
+        type: string
+      checkInDate:
+        type: string
+      checkOutDate:
+        type: string
+      hotelId:
+        type: string
+      roomType:
+        type: string
+      status:
+        type: string
+      totalAmount:
+        type: integer
+      userId:
+        type: string
+    type: object
+  models.DeleteBookingResponse:
+    properties:
+      bookingId:
+        type: string
+      message:
+        type: string
+    type: object
+  models.DescriptionResponse:
+    properties:
+      address:
+        type: string
+      hotelId:
+        type: string
+      location:
+        type: string
+      name:
+        type: string
+      rating:
+        type: integer
+      rooms:
+        items:
+          $ref: '#/definitions/models.Room'
+        type: array
+    type: object
+  models.GetHotelResponse:
+    properties:
+      hotels:
+        items:
+          $ref: '#/definitions/models.HotelInfo'
+        type: array
+    type: object
+  models.HotelInfo:
+    properties:
+      address:
+        type: string
+      hotelId:
+        type: string
+      location:
+        type: string
+      name:
+        type: string
+      rating:
+        type: integer
+    type: object
+  models.LoginRequest:
+    properties:
+      password:
+        type: string
+      user_name:
+        type: string
+    type: object
+  models.LoginResponse:
+    properties:
+      expired_at:
+        type: string
+      token:
+        type: string
+    type: object
+  models.PostBookingRequest:
+    properties:
+      checkInDate:
+        type: string
+      checkOutDate:
+        type: string
+      hotelId:
+        type: string
+      roomType:
+        type: string
+      userId:
+        type: string
+    type: object
+  models.PutBookingRequest:
+    properties:
+      checkInDate:
+        type: string
+      checkOutDate:
+        type: string
+      status:
+        type: string
+    type: object
+  models.Room:
+    properties:
+      availability:
+        type: boolean
+      pricePerNight:
+        type: integer
+      roomType:
+        type: string
+    type: object
+  models.RoomAvailability:
+    properties:
+      rooms:
+        items:
+          $ref: '#/definitions/models.RoomInfo'
+        type: array
+    type: object
+  models.RoomInfo:
+    properties:
+      availableRooms:
+        type: integer
+      hotelId:
+        type: string
+      pricePerNight:
+        type: integer
+      roomType:
+        type: string
+    type: object
+  models.UserRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      user_name:
+        type: string
+    type: object
+  models.UserResponse:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      user_id:
+        type: string
+      user_name:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Api-gateway service
+  title: Api-gateway service
+  version: "1.0"
+paths:
+  /api/bookings:
+    post:
+      consumes:
+      - application/json
+      description: Create a new booking in the system
+      parameters:
+      - description: Booking details
+        in: body
+        name: booking
+        required: true
+        schema:
+          $ref: '#/definitions/models.PostBookingRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.BookingResponse'
+        "400":
+          description: Invalid input
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Add a new booking
+      tags:
+      - booking
+  /api/bookings/{bookingId}:
+    delete:
+      consumes:
+      - application/json
+      description: Remove a specific booking from the system
+      parameters:
+      - description: Booking ID
+        in: path
+        name: bookingId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.DeleteBookingResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Booking not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete a booking
+      tags:
+      - booking
+    get:
+      consumes:
+      - application/json
+      description: Get the details of a specific booking
+      parameters:
+      - description: Booking ID
+        in: path
+        name: bookingId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BookingResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Booking not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Retrieve a booking
+      tags:
+      - booking
+    put:
+      consumes:
+      - application/json
+      description: Update the details of an existing booking
+      parameters:
+      - description: Booking ID
+        in: path
+        name: bookingId
+        required: true
+        type: string
+      - description: Updated booking details
+        in: body
+        name: booking
+        required: true
+        schema:
+          $ref: '#/definitions/models.PutBookingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BookingResponse'
+        "400":
+          description: Invalid input
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Booking not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update an existing booking
+      tags:
+      - booking
+  /api/hotels:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of all hotels from the system. This endpoint requires
+        a valid JWT token in the Authorization header.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.GetHotelResponse'
+        "401":
+          description: Unauthorized - Authorization header required or token is invalid
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get all hotels
+      tags:
+      - hotel
+  /api/hotels/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve detailed description of a specific hotel. This endpoint
+        requires a valid JWT token in the Authorization header.
+      parameters:
+      - description: Hotel ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.DescriptionResponse'
+        "400":
+          description: Invalid hotel ID
+          schema:
+            type: string
+        "401":
+          description: Unauthorized - Authorization header required or token is invalid
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get hotel description
+      tags:
+      - hotel
+  /api/hotels/{id}/rooms/availability:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve the available rooms for a specific hotel. This endpoint
+        requires a valid JWT token in the Authorization header.
+      parameters:
+      - description: Hotel ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.RoomAvailability'
+        "400":
+          description: Invalid hotel ID
+          schema:
+            type: string
+        "401":
+          description: Unauthorized - Authorization header required or token is invalid
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get rooms of a hotel
+      tags:
+      - hotel
+  /api/users:
+    post:
+      consumes:
+      - application/json
+      description: Registers a new user with the provided details
+      parameters:
+      - description: User Details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.UserResponse'
+        "400":
+          description: Invalid data
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Register a new user
+      tags:
+      - Users
+  /api/users/{userId}/bookings:
+    get:
+      consumes:
+      - application/json
+      description: Get all bookings associated with a specific user
+      parameters:
+      - description: User ID
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BookingResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Retrieve bookings for a user
+      tags:
+      - booking
+  /api/users/login:
+    post:
+      consumes:
+      - application/json
+      description: Logs in a user and returns a JWT token
+      parameters:
+      - description: Login Credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.LoginResponse'
+        "400":
+          description: Invalid data
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: User login
+      tags:
+      - Users
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

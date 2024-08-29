@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+option go_package = "./genhotel";
+
+// Hotel service definition
+service Hotel {
+    rpc GetHotel(VoidHotel) returns (GetHotelResponse);
+    rpc DescriptionHotel(DescriptionRequest) returns (DescriptionResponse);
+    rpc GetRooms(DescriptionRequest) returns (RoomAvailability);
+}
+
+// Request message for describing a hotel
+message DescriptionRequest {
+    string hotelId = 1;
+}
+
+// Response message for hotel description
+message DescriptionResponse {
+    string hotelId = 1;
+    string name = 2;
+    string location = 3;
+    int32 rating = 4;
+    string address = 5;
+    repeated Room rooms = 6;
+}
+
+// Room details message
+message Room {
+    string roomType = 1;
+    int32 pricePerNight = 2;
+    bool availability = 3;
+}
+
+// Response message for getting hotel information
+message GetHotelResponse {
+    repeated HotelInfo hotels = 1; // Changed to accommodate multiple hotels
+}
+
+// Message for individual hotel information
+message HotelInfo {
+    string hotelId = 1;
+    string name = 2;
+    string location = 3;
+    int32 rating = 4;
+    string address = 5;
+}
+
+// Message for room availability
+message RoomAvailability {
+    repeated RoomInfo rooms=1;
+}
+
+message RoomInfo{
+    string roomType = 1;
+    int32 availableRooms = 2;
+    int32 pricePerNight = 3;
+    string hotelId = 4;
+}
+
+// Empty message used for requests that require no input
+message VoidHotel {}
