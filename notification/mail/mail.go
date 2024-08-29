@@ -11,6 +11,7 @@ type Mailer struct{
 	Cfg config.Config
 }
 
+
 func NewMailer(cfg config.Config)*Mailer{
 	return &Mailer{Cfg: cfg}
 }
@@ -31,3 +32,5 @@ func (ml *Mailer)Mail(msg string, to string) {
 
 	fmt.Println("Email sent successfully!")
 }
+
+
