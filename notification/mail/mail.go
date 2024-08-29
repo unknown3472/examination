@@ -32,5 +32,3 @@ func (ml *Mailer)Mail(msg string, to string) {
 
 	fmt.Println("Email sent successfully!")
 }
-
-
